@@ -10,7 +10,7 @@
 3. **게시판 목록 조회**
 - 게시판 전체 목록을 조회할 수 있습니다.
 - 검색 결과는 pagination 되어 보여집니다.
-- 검색 결과 목록순을
+- 검색 결과 조건 : 작성 날짜 오름차순, 내림차순
 
 4. **게시판 수정**
 - 게시판의 제목과 글을 수정할 수 있습니다.
@@ -28,9 +28,9 @@
 | id | long |
 | title | varchar |
 | content | varchar |
-| createdAt | localdatetime |
-| updatedAt | localdatetime |
-| deletedAt | localdatetime |
+| createdAt | date |
+| updatedAt | date |
+| deletedAt | date |
 
 <br>
 
@@ -42,7 +42,7 @@
 - Gradle
 - JPA
 - QueryDSL
-- h2
+- H2
 
 **라이브러리**
 
