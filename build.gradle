@@ -31,6 +31,7 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 	/*h2*/
+	implementation group: 'com.h2database', name: 'h2', version: '2.1.214'
 	testImplementation group: 'com.h2database', name: 'h2', version: '2.1.214'
 
 	/*jpa*/
