@@ -8,10 +8,12 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 @Data
 public class BoardResponseDto {
+
+    private BoardResponseDto () {}
+
     private String title;
     private String content;
     private LocalDateTime createdAt;
