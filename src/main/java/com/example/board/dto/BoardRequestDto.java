@@ -1,14 +1,11 @@
 package com.example.board.dto;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 
 @AllArgsConstructor
-@Setter
+@Builder
 @Getter
 public class BoardRequestDto {
 
