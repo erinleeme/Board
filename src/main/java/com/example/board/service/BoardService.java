@@ -29,6 +29,7 @@ public class BoardService {
         return BoardResponseDto.builder()
                 .title(boardRequestDto.getTitle())
                 .content(boardRequestDto.getContent())
+                .createdAt(board.getCreatedAt())
                 .build();
     }
 }
