@@ -1,9 +1,11 @@
 package com.example.board.entity;
 
 import jakarta.persistence.*;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Setter
 @Entity
 public class Board {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
