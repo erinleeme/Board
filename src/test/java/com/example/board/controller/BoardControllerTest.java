@@ -5,6 +5,7 @@ import com.example.board.dto.BoardResponseDto;
 import com.example.board.entity.Board;
 import com.example.board.service.BoardService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -14,8 +15,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BoardController.class)
@@ -32,6 +37,14 @@ public class BoardControllerTest {
 
     BoardRequestDto boardRequestDto;
     BoardResponseDto boardResponseDto;
+    String code;
+    String message;
+
+    @BeforeEach
+    void beforeEach(){
+        code = "$..code";
+        message = "$..message";
+    }
 
 
     @Test
@@ -54,6 +67,22 @@ public class BoardControllerTest {
         mockMvc.perform(post("/board")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(boardRequestDto)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    public void createBoard_ValidError() throws Exception {
+        boardRequestDto = BoardRequestDto.builder()
+                .title("")
+                .content("test board content")
+                .build();
+
+        mockMvc.perform(post("/board")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(boardRequestDto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath(code).value(400))
+                .andExpect(jsonPath(message).value("제목을 작성해 주세요."));
     }
 }
