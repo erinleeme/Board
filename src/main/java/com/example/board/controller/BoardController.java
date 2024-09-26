@@ -1,5 +1,6 @@
 package com.example.board.controller;
 
+import com.example.board.dto.BoardPaginationDto;
 import com.example.board.dto.BoardRequestDto;
 import com.example.board.dto.BoardResponseDto;
 import com.example.board.service.BoardService;
@@ -23,8 +24,10 @@ public class BoardController {
     }
     
     @GetMapping("/board")
-    public ResponseDto<List<BoardResponseDto>> searchAllBoard(@RequestParam(value="sort", defaultValue = "asc") String sort) {
-        return null;
+    public ResponseDto<List<BoardResponseDto>> getAllBoards(@RequestBody BoardPaginationDto boardPaginationDto) {
+        System.out.printf("BoardController");
+        List<BoardResponseDto> boardList = boardService.getAllBoards(boardPaginationDto);
+        return ResponseDto.success(boardList);
     }
 
 }
