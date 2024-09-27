@@ -22,10 +22,9 @@ public class BoardController {
         BoardResponseDto boardResponseDto = boardService.createBoard(boardRequestDto);
         return ResponseDto.success(boardResponseDto);
     }
-    
+
     @GetMapping("/board")
-    public ResponseDto<List<BoardResponseDto>> getAllBoards(@RequestBody BoardPaginationDto boardPaginationDto) {
-        System.out.printf("BoardController");
+    public ResponseDto<List<BoardResponseDto>> getAllBoards(BoardPaginationDto boardPaginationDto) {
         List<BoardResponseDto> boardList = boardService.getAllBoards(boardPaginationDto);
         return ResponseDto.success(boardList);
     }

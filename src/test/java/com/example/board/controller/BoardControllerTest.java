@@ -83,4 +83,9 @@ public class BoardControllerTest {
                 .andExpect(jsonPath(code).value(400))
                 .andExpect(jsonPath(message).value("제목을 작성해 주세요."));
     }
+
+    @Test
+    public void getAllBoards_Success() throws Exception{
+
+    }
 }

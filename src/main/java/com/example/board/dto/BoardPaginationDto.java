@@ -1,16 +1,20 @@
 package com.example.board.dto;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@Getter
+@AllArgsConstructor
+@Data
 public class BoardPaginationDto {
     private int size;
     private int page;
     private int start;
 
+    private BoardPaginationDto() {}
+
     public BoardPaginationDto(int size, int page) {
         this.size = size;
         this.page = page;
-        start = size * (page-1);
+        this.start = size * (page-1);
     }
 }
