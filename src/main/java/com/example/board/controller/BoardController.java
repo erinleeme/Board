@@ -24,7 +24,8 @@ public class BoardController {
     }
 
     @GetMapping("/board")
-    public ResponseDto<List<BoardResponseDto>> getAllBoards(BoardPaginationDto boardPaginationDto) {
+    public ResponseDto<List<BoardResponseDto>> getAllBoards(@RequestParam(value = "size") int size, @RequestParam(value = "page") int page) {
+        BoardPaginationDto boardPaginationDto = new BoardPaginationDto(size, page);
         List<BoardResponseDto> boardList = boardService.getAllBoards(boardPaginationDto);
         return ResponseDto.success(boardList);
     }

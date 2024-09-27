@@ -37,7 +37,6 @@ public class BoardService {
     }
 
     public List<BoardResponseDto> getAllBoards(BoardPaginationDto boardPaginationDto) {
-        System.out.printf("BoardService");
         List<Board> boardList = boardRepository.getAllBoards(boardPaginationDto);
         return boardList.stream()
                 .map(this::convertToResponseDto)

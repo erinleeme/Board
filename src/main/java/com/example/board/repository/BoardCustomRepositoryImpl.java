@@ -21,8 +21,8 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository{
     public List<Board> getAllBoards(BoardPaginationDto boardPaginationDto) {
         return jpaQueryFactory.selectFrom(board)
                     .orderBy(board.createdAt.desc())
-                    .offset(boardPaginationDto.getStart())
                     .limit(boardPaginationDto.getSize())
+                    .offset(boardPaginationDto.getStart())
                     .fetch();
     }
 }

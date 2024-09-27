@@ -1,5 +1,6 @@
 package com.example.board.controller;
 
+import com.example.board.dto.BoardPaginationDto;
 import com.example.board.dto.BoardRequestDto;
 import com.example.board.dto.BoardResponseDto;
 import com.example.board.entity.Board;
@@ -35,6 +36,7 @@ public class BoardControllerTest {
 
     BoardRequestDto boardRequestDto;
     BoardResponseDto boardResponseDto;
+    BoardPaginationDto boardPaginationDto;
     String code;
     String message;
 
@@ -52,7 +54,11 @@ public class BoardControllerTest {
                 .content("test board content")
                 .build();
 
-        Board board = new Board(1L, boardRequestDto.getTitle(), boardRequestDto.getContent(), LocalDateTime.now(), LocalDateTime.now(), null);
+        Board board = new Board(1L, boardRequestDto.getTitle()
+                , boardRequestDto.getContent()
+                , LocalDateTime.now()
+                , LocalDateTime.now()
+                , null);
 
         boardResponseDto = BoardResponseDto.builder()
                 .title(board.getTitle())
@@ -86,6 +92,12 @@ public class BoardControllerTest {
 
     @Test
     public void getAllBoards_Success() throws Exception{
+
+
+
+        boardPaginationDto = new BoardPaginationDto(5, 1);
+
+
 
     }
 }
