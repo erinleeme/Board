@@ -13,14 +13,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(BoardController.class)
 public class BoardControllerTest {
@@ -92,12 +96,23 @@ public class BoardControllerTest {
 
     @Test
     public void getAllBoards_Success() throws Exception{
+        int size = 5;
+        int page = 1;
 
+        BoardPaginationDto boardPaginationDto = new BoardPaginationDto(size, page);
 
+        List<BoardResponseDto> boardList = new ArrayList<>();
+        for(int i=0 ; i<10 ; i++) {
+            boardList.add(new BoardResponseDto("title"+i, "content"+i, LocalDateTime.now()));
+        }
 
-        boardPaginationDto = new BoardPaginationDto(5, 1);
+        when(boardService.getAllBoards(boardPaginationDto)).thenReturn(boardList);
 
-
-
+        ResultActions actions = mockMvc.perform(get("/board")
+                .param("size", "5")
+                .param("page", "1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(boardList)));
     }
 }
