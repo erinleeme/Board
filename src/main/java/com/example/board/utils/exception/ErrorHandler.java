@@ -1,5 +1,6 @@
 package com.example.board.utils.exception;
 
+import com.example.board.utils.ResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -11,10 +12,16 @@ import java.util.Objects;
 @RestControllerAdvice
 public class ErrorHandler {
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseDto<String> runtimeException(RuntimeException e) {
+        return ResponseDto.fail(e.getMessage());
+    }
+
     /*valid exception*/
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ErrorResponseDto methodArgumentNotValidException(MethodArgumentNotValidException e) {
-        return new ErrorResponseDto(400, Objects.requireNonNull(e.getFieldError()).getDefaultMessage());
+    public ResponseDto<String> methodArgumentNotValidException(MethodArgumentNotValidException e) {
+        return ResponseDto.fail(Objects.requireNonNull(e.getFieldError()).getDefaultMessage());
     }
 }

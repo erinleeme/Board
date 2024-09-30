@@ -14,4 +14,8 @@ public class ResponseDto<T> {
     public static <T> ResponseDto<T> success(T data) {
         return new ResponseDto<>("success", data);
     }
+
+    public static <String> ResponseDto<String> fail(String message) {
+        return new ResponseDto<>("fail", message);
+    }
 }
