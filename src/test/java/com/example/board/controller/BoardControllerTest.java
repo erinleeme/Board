@@ -21,8 +21,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -79,8 +78,8 @@ public class BoardControllerTest {
                         .content(objectMapper.writeValueAsString(boardRequestDto)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("success"))
-                .andExpect(jsonPath("$.data.id").value(boardResponseDto.getId()))  // ID 검증
-                .andExpect(jsonPath("$.data.title").value(boardResponseDto.getTitle())) // 제목 검증
+                .andExpect(jsonPath("$.data.id").value(boardResponseDto.getId()))
+                .andExpect(jsonPath("$.data.title").value(boardResponseDto.getTitle()))
                 .andExpect(jsonPath("$.data.content").value(boardResponseDto.getContent()))
                 .andDo(print());
     }
@@ -157,9 +156,36 @@ public class BoardControllerTest {
                         .content(objectMapper.writeValueAsString(boardResponseDto)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("success"))
-                .andExpect(jsonPath("$.data.id").value(boardResponseDto.getId()))  // ID 검증
-                .andExpect(jsonPath("$.data.title").value(boardResponseDto.getTitle())) // 제목 검증
+                .andExpect(jsonPath("$.data.id").value(boardResponseDto.getId()))
+                .andExpect(jsonPath("$.data.title").value(boardResponseDto.getTitle()))
                 .andExpect(jsonPath("$.data.content").value(boardResponseDto.getContent()))
+                .andDo(print());
+    }
+
+    @Test
+    public void deleteBoard_Success() throws Exception {
+        Long boardId = 1L;
+
+        when(boardService.deleteBoard(boardId)).thenReturn(boardId);
+
+        mockMvc.perform(delete("/board/"+boardId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(boardResponseDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("success"))
+                .andExpect(jsonPath("$.data").value(boardId))
+                .andDo(print());
+    }
+
+    @Test
+    public void deleteBoard_FailById() throws Exception {
+        long boardId = 1L;
+
+        doThrow(new RuntimeException("찾을 수 없는 게시판입니다. id : " + boardId)).when(boardService).deleteBoard(boardId);
+
+        mockMvc.perform(delete("/board/"+boardId)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
                 .andDo(print());
     }
 }
