@@ -30,4 +30,10 @@ public class BoardController {
         return ResponseDto.success(boardList);
     }
 
+    @PatchMapping("/board/{boardId}")
+    public ResponseDto<BoardResponseDto> updateBoard(@PathVariable Long boardId,
+                                                     @RequestParam @Valid BoardRequestDto boardRequestDto) {
+        BoardResponseDto boardResponseDto = boardService.updateBoard(boardId, boardRequestDto);
+        return ResponseDto.success(null);
+    }
 }
