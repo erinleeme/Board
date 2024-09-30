@@ -103,7 +103,7 @@ public class BoardControllerTest {
 
         List<BoardResponseDto> boardList = new ArrayList<>();
         for(int i=0 ; i<10 ; i++) {
-            boardList.add(new BoardResponseDto("title"+i, "content"+i, LocalDateTime.now()));
+            boardList.add(new BoardResponseDto("title", "content", LocalDateTime.now()));
         }
 
         when(boardService.getAllBoards(boardPaginationDto)).thenReturn(boardList);
@@ -113,6 +113,8 @@ public class BoardControllerTest {
                 .param("page", "1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(boardList)));
+                .andExpect(jsonPath("$.status").value("success"))
+                .andExpect(jsonPath("$.data").isArray())
+                .andExpect(jsonPath("$.data.length()").value(boardList.size()));
     }
 }
