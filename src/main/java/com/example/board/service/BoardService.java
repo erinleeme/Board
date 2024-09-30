@@ -56,6 +56,15 @@ public class BoardService {
         return convertToResponseDto(board);
     }
 
+    @Transactional
+    public Long deleteBoard(long boardId) {
+        if(!boardRepository.existsById(boardId)) {
+            throw new RuntimeException("찾을 수 없는 게시판입니다. id : " + boardId);
+        }
+        boardRepository.deleteById(boardId);
+        return boardId;
+    }
+
     private BoardResponseDto convertToResponseDto(Board board) {
         return new BoardResponseDto(board.getId(), board.getTitle(), board.getContent(), board.getCreatedAt());
     }
