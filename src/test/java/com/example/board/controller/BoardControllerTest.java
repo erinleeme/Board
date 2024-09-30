@@ -6,7 +6,6 @@ import com.example.board.dto.BoardResponseDto;
 import com.example.board.entity.Board;
 import com.example.board.service.BoardService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -40,16 +39,6 @@ public class BoardControllerTest {
 
     BoardRequestDto boardRequestDto;
     BoardResponseDto boardResponseDto;
-    BoardPaginationDto boardPaginationDto;
-    String code;
-    String message;
-
-    @BeforeEach
-    void beforeEach(){
-        code = "$..code";
-        message = "$..message";
-    }
-
 
     @Test
     public void createBoard_Success() throws Exception {
