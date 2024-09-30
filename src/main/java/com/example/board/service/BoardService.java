@@ -30,6 +30,7 @@ public class BoardService {
         boardRepository.save(board);
 
         return BoardResponseDto.builder()
+                .id(board.getId())
                 .title(boardRequestDto.getTitle())
                 .content(boardRequestDto.getContent())
                 .createdAt(board.getCreatedAt())
@@ -43,7 +44,19 @@ public class BoardService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public BoardResponseDto updateBoard(Long boardId, BoardRequestDto boardRequestDto) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new RuntimeException("찾을 수 없는 게시판입니다. id : " + boardId));
+
+        board.setTitle(boardRequestDto.getTitle());
+        board.setContent(boardRequestDto.getContent());
+        board.setUpdatedAt(LocalDateTime.now());
+
+        return convertToResponseDto(board);
+    }
+
     private BoardResponseDto convertToResponseDto(Board board) {
-        return new BoardResponseDto(board.getTitle(), board.getContent(), board.getCreatedAt());
+        return new BoardResponseDto(board.getId(), board.getTitle(), board.getContent(), board.getCreatedAt());
     }
 }

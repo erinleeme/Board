@@ -13,6 +13,7 @@ public class BoardResponseDto {
 
     private BoardResponseDto () {}
 
+    private Long id;
     private String title;
     private String content;
     private LocalDateTime createdAt;

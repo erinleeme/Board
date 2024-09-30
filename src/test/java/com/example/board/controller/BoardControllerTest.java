@@ -19,10 +19,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -65,17 +66,22 @@ public class BoardControllerTest {
                 , null);
 
         boardResponseDto = BoardResponseDto.builder()
+                .id(board.getId())
                 .title(board.getTitle())
                 .content(board.getContent())
                 .createdAt(board.getCreatedAt())
                 .build();
 
-        given(boardService.createBoard(boardRequestDto)).willReturn(boardResponseDto);
+        given(boardService.createBoard(any(BoardRequestDto.class))).willReturn(boardResponseDto);
 
         mockMvc.perform(post("/board")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(boardRequestDto)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(boardRequestDto)))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("success"))
+                .andExpect(jsonPath("$.data.id").value(boardResponseDto.getId()))  // ID 검증
+                .andExpect(jsonPath("$.data.title").value(boardResponseDto.getTitle())) // 제목 검증
+                .andExpect(jsonPath("$.data.content").value(boardResponseDto.getContent()))
                 .andDo(print());
     }
 
@@ -90,8 +96,9 @@ public class BoardControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(boardRequestDto)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath(code).value(400))
-                .andExpect(jsonPath(message).value("제목을 작성해 주세요."));
+                .andExpect(jsonPath("$.status").value("fail"))
+                .andExpect(jsonPath("$.message").value("제목을 작성해 주세요."))
+                .andDo(print());
     }
 
     @Test
@@ -103,7 +110,7 @@ public class BoardControllerTest {
 
         List<BoardResponseDto> boardList = new ArrayList<>();
         for(int i=0 ; i<10 ; i++) {
-            boardList.add(new BoardResponseDto("title", "content", LocalDateTime.now()));
+            boardList.add(new BoardResponseDto((long) i,"title", "content", LocalDateTime.now()));
         }
 
         when(boardService.getAllBoards(boardPaginationDto)).thenReturn(boardList);
@@ -115,6 +122,44 @@ public class BoardControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("success"))
                 .andExpect(jsonPath("$.data").isArray())
-                .andExpect(jsonPath("$.data.length()").value(boardList.size()));
+                .andExpect(jsonPath("$.data.length()").value(boardList.size()))
+                .andDo(print());
+    }
+
+    @Test
+    public void updateBoard_Success() throws Exception {
+        Long boardId = 1L;
+
+        boardRequestDto = BoardRequestDto.builder()
+                .title("test updated title")
+                .content("test updated content")
+                .build();
+
+        Board board = new Board(
+                boardId
+                , boardRequestDto.getTitle()
+                , boardRequestDto.getContent()
+                , LocalDateTime.now()
+                , LocalDateTime.now()
+                , null);
+
+        boardResponseDto = BoardResponseDto.builder()
+                .id(board.getId())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .createdAt(board.getCreatedAt())
+                .build();
+
+        when(boardService.updateBoard(any(), any())).thenReturn(boardResponseDto);
+
+        mockMvc.perform(patch("/board/"+boardId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(boardResponseDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("success"))
+                .andExpect(jsonPath("$.data.id").value(boardResponseDto.getId()))  // ID 검증
+                .andExpect(jsonPath("$.data.title").value(boardResponseDto.getTitle())) // 제목 검증
+                .andExpect(jsonPath("$.data.content").value(boardResponseDto.getContent()))
+                .andDo(print());
     }
 }
