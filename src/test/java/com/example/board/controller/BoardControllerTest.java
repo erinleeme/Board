@@ -5,6 +5,7 @@ import com.example.board.dto.BoardRequestDto;
 import com.example.board.dto.BoardResponseDto;
 import com.example.board.entity.Board;
 import com.example.board.service.BoardService;
+import com.example.board.utils.enums.SortKeyword;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,8 +94,9 @@ public class BoardControllerTest {
     public void getAllBoards_Success() throws Exception{
         int size = 5;
         int page = 1;
+        String sortKeyword = "asc";
 
-        BoardPaginationDto boardPaginationDto = new BoardPaginationDto(size, page);
+        BoardPaginationDto boardPaginationDto = new BoardPaginationDto(size, page, sortKeyword);
 
         List<BoardResponseDto> boardList = new ArrayList<>();
         for(int i=0 ; i<10 ; i++) {
@@ -106,6 +108,7 @@ public class BoardControllerTest {
         ResultActions actions = mockMvc.perform(get("/board")
                 .param("size", "5")
                 .param("page", "1")
+                .param("sortKeyword", "asc")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("success"))

@@ -22,6 +22,14 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseDto<String> methodArgumentNotValidException(MethodArgumentNotValidException e) {
+        System.out.println("methodArgumentNotValidException");
         return ResponseDto.fail(Objects.requireNonNull(e.getFieldError()).getDefaultMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseDto<String> illegalArgumentException(IllegalArgumentException e) {
+        System.out.println("illegalArgumentException");
+        return ResponseDto.fail(Objects.requireNonNull(e.getMessage()));
     }
 }
