@@ -118,28 +118,52 @@ public class BoardControllerTest {
     }
 
     @Test
-    public void updateBoard_Success() throws Exception {
-        Long boardId = 1L;
+    public void getAllBoards_FailByKeyword() throws Exception {
+        int page = 1;
+        int size = 5;
+        String sortKeyword = "descasc";
 
-        boardRequestDto = BoardRequestDto.builder()
-                .title("test updated title")
-                .content("test updated content")
-                .build();
+        mockMvc.perform(get("/board")
+                        .param("size", String.valueOf(page))
+                        .param("page", String.valueOf(size))
+                        .param("sortKeyword", sortKeyword)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value("fail"))
+                .andExpect(jsonPath("$.message").value("유효하지 않은 정렬값입니다."))
+                .andDo(print());
+    }
 
-        Board board = new Board(
-                boardId
-                , boardRequestDto.getTitle()
-                , boardRequestDto.getContent()
-                , LocalDateTime.now()
-                , LocalDateTime.now()
-                , null);
-
+    @Test
+    public void getBoard_Success() throws Exception {
+        long boardId = 1;
         boardResponseDto = BoardResponseDto.builder()
-                .id(board.getId())
-                .title(board.getTitle())
-                .content(board.getContent())
-                .createdAt(board.getCreatedAt())
-                .build();
+                .id(boardId)
+                .title("test")
+                .content("content")
+                .createdAt(LocalDateTime.now()).build();
+
+        when(boardService.getBoard(boardId)).thenReturn(boardResponseDto);
+
+        mockMvc.perform(get("/board/"+boardId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("success"))
+                .andExpect(jsonPath("$.data.id").value(boardId))
+                .andExpect(jsonPath("$.data.title").value("test"))
+                .andExpect(jsonPath("$.data.content").value("content"))
+                .andExpect(jsonPath("$.data.createdAt").value(boardResponseDto.getCreatedAt().toString()))
+                .andDo(print());
+    }
+
+    @Test
+    public void updateBoard_Success() throws Exception {
+        long boardId = 1;
+        boardResponseDto = BoardResponseDto.builder()
+                .id(boardId)
+                .title("test")
+                .content("content")
+                .createdAt(LocalDateTime.now()).build();
 
         when(boardService.updateBoard(any(), any())).thenReturn(boardResponseDto);
 
