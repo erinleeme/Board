@@ -2,6 +2,7 @@ package com.example.board.repository;
 
 import com.example.board.dto.BoardPaginationDto;
 import com.example.board.entity.Board;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
@@ -19,10 +20,19 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository{
 
     @Override
     public List<Board> getAllBoards(BoardPaginationDto boardPaginationDto) {
-        return jpaQueryFactory.selectFrom(board)
-                    .orderBy(board.createdAt.desc())
+        JPAQuery<Board> query = jpaQueryFactory.selectFrom(board);
+
+        if(boardPaginationDto.getSortKeyword().toString().equalsIgnoreCase("asc")) {
+            System.out.print("asc");
+            return query.orderBy(board.createdAt.asc())
                     .limit(boardPaginationDto.getSize())
                     .offset(boardPaginationDto.getStart())
                     .fetch();
+        }
+        System.out.print("desc");
+        return query.orderBy(board.createdAt.desc())
+                .limit(boardPaginationDto.getSize())
+                .offset(boardPaginationDto.getStart())
+                .fetch();
     }
 }
