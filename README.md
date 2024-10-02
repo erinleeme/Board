@@ -1,4 +1,4 @@
-# Board (24.09.19)
+# Board (24.10.02)
 ## 1. 게시판 기능 요구 사항
 1. **게시판 생성**
 - 게시판 정보는 제목, 내용, 작성 날짜가 있습니다.
@@ -38,6 +38,8 @@
 | 게시판 전체 조회 | GET | /board
 | 게시판 수정 | PATCH | /board/{boardId}
 | 게시판 삭제 | DELETE | /board/{boardId}
+
+[- API 명세](https://github.com/erinleeme/Board/wiki/API-%EC%84%A4%EA%B3%84)
 
 <br>
 
