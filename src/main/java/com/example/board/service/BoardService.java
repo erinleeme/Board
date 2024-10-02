@@ -44,6 +44,13 @@ public class BoardService {
                 .collect(Collectors.toList());
     }
 
+
+    public BoardResponseDto getBoard(long boardId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new RuntimeException("찾을 수 없는 게시판입니다. id : " + boardId));
+        return convertToResponseDto(board);
+    }
+
     @Transactional
     public BoardResponseDto updateBoard(Long boardId, BoardRequestDto boardRequestDto) {
         Board board = boardRepository.findById(boardId)
